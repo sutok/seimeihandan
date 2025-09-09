@@ -1,0 +1,14 @@
+# 姓名判断アプリ - GCP Functions 依存関係
+# jamdict関連
+jamdict>=0.1a11
+jamdict-data>=1.5
+
+# Flask関連
+Flask>=2.3.0
+flask-cors>=4.0.0
+
+# Google Cloud Functions
+functions-framework>=3.0.0
+
+# ユーティリティ
+requests>=2.31.0

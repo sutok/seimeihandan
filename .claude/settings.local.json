@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm start)",
+      "Bash(source:*)",
+      "Bash(python:*)",
+      "Bash(pkill:*)",
+      "Bash(gcloud config get-value:*)",
+      "Bash(npm run build:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

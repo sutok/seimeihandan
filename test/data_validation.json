@@ -1,0 +1,219 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "purpose": "姓名判断データ検証用テストケース",
+    "test_categories": ["漢字画数", "ひらがな画数", "五格計算", "吉凶判定"],
+    "total_test_cases": 20,
+    "last_updated": "2025-09-08"
+  },
+  "test_cases": {
+    "basic_calculation": [
+      {
+        "test_id": "T001",
+        "category": "五格計算",
+        "name": "田中太郎",
+        "lastName": "田中",
+        "firstName": "太郎", 
+        "expected": {
+          "characters": [
+            {"char": "田", "stroke": 5},
+            {"char": "中", "stroke": 4},
+            {"char": "太", "stroke": 4},
+            {"char": "郎", "stroke": 9}
+          ],
+          "gogaku": {
+            "天格": {"value": 9, "calculation": "田(5) + 中(4)"},
+            "人格": {"value": 8, "calculation": "中(4) + 太(4)"},
+            "地格": {"value": 13, "calculation": "太(4) + 郎(9)"},
+            "外格": {"value": 14, "calculation": "総格(22) - 人格(8)"},
+            "総格": {"value": 22, "calculation": "田(5) + 中(4) + 太(4) + 郎(9)"}
+          }
+        }
+      },
+      {
+        "test_id": "T002",
+        "category": "五格計算",
+        "name": "山田花子",
+        "lastName": "山田",
+        "firstName": "花子",
+        "expected": {
+          "characters": [
+            {"char": "山", "stroke": 3},
+            {"char": "田", "stroke": 5},
+            {"char": "花", "stroke": 7},
+            {"char": "子", "stroke": 3}
+          ],
+          "gogaku": {
+            "天格": {"value": 8, "calculation": "山(3) + 田(5)"},
+            "人格": {"value": 12, "calculation": "田(5) + 花(7)"},
+            "地格": {"value": 10, "calculation": "花(7) + 子(3)"},
+            "外格": {"value": 6, "calculation": "総格(18) - 人格(12)"},
+            "総格": {"value": 18, "calculation": "山(3) + 田(5) + 花(7) + 子(3)"}
+          }
+        }
+      }
+    ],
+    "hiragana_mixed": [
+      {
+        "test_id": "T003",
+        "category": "ひらがな混在",
+        "name": "田中あい",
+        "lastName": "田中",
+        "firstName": "あい",
+        "expected": {
+          "characters": [
+            {"char": "田", "stroke": 5},
+            {"char": "中", "stroke": 4},
+            {"char": "あ", "stroke": 3},
+            {"char": "い", "stroke": 2}
+          ],
+          "gogaku": {
+            "天格": {"value": 9, "calculation": "田(5) + 中(4)"},
+            "人格": {"value": 7, "calculation": "中(4) + あ(3)"},
+            "地格": {"value": 5, "calculation": "あ(3) + い(2)"},
+            "外格": {"value": 7, "calculation": "総格(14) - 人格(7)"},
+            "総格": {"value": 14, "calculation": "田(5) + 中(4) + あ(3) + い(2)"}
+          }
+        }
+      },
+      {
+        "test_id": "T004",
+        "category": "ひらがな混在",
+        "name": "さとう美香",
+        "lastName": "さとう",
+        "firstName": "美香",
+        "expected": {
+          "characters": [
+            {"char": "さ", "stroke": 3},
+            {"char": "と", "stroke": 2},
+            {"char": "う", "stroke": 2},
+            {"char": "美", "stroke": 9},
+            {"char": "香", "stroke": 9}
+          ],
+          "gogaku": {
+            "天格": {"value": 7, "calculation": "さ(3) + と(2) + う(2)"},
+            "人格": {"value": 11, "calculation": "う(2) + 美(9)"},
+            "地格": {"value": 18, "calculation": "美(9) + 香(9)"},
+            "外格": {"value": 14, "calculation": "総格(25) - 人格(11)"},
+            "総格": {"value": 25, "calculation": "さ(3) + と(2) + う(2) + 美(9) + 香(9)"}
+          }
+        }
+      }
+    ],
+    "single_character": [
+      {
+        "test_id": "T005",
+        "category": "一文字姓名",
+        "name": "森薫",
+        "lastName": "森",
+        "firstName": "薫",
+        "expected": {
+          "characters": [
+            {"char": "森", "stroke": 12},
+            {"char": "薫", "stroke": 16}
+          ],
+          "gogaku": {
+            "天格": {"value": 13, "calculation": "森(12) + 霊数(1)"},
+            "人格": {"value": 28, "calculation": "森(12) + 薫(16)"},
+            "地格": {"value": 17, "calculation": "薫(16) + 霊数(1)"},
+            "外格": {"value": 2, "calculation": "霊数(1) + 霊数(1)"},
+            "総格": {"value": 28, "calculation": "森(12) + 薫(16)"}
+          },
+          "special_rules_applied": ["single_character_surname", "single_character_name"]
+        }
+      }
+    ],
+    "judgment_validation": [
+      {
+        "test_id": "T006",
+        "category": "吉凶判定",
+        "gogaku_values": {
+          "天格": 13,
+          "人格": 21,
+          "地格": 15,
+          "外格": 7,
+          "総格": 28
+        },
+        "expected_judgment": {
+          "天格": {"result": "大吉", "description": "学芸に優れ人気運あり"},
+          "人格": {"result": "大吉", "description": "統率力があり成功運"},
+          "地格": {"result": "大吉", "description": "徳望高く家族運良好"},
+          "外格": {"result": "吉", "description": "意志強固で独立心旺盛"},
+          "総格": {"result": "凶", "description": "不和・厄難・薄幸運"}
+        }
+      }
+    ],
+    "edge_cases": [
+      {
+        "test_id": "T007",
+        "category": "エッジケース",
+        "name": "高橋ゆう",
+        "lastName": "高橋",
+        "firstName": "ゆう",
+        "expected": {
+          "characters": [
+            {"char": "高", "stroke": 10},
+            {"char": "橋", "stroke": 16},
+            {"char": "ゆ", "stroke": 2},
+            {"char": "う", "stroke": 2}
+          ],
+          "gogaku": {
+            "天格": {"value": 26, "calculation": "高(10) + 橋(16)"},
+            "人格": {"value": 18, "calculation": "橋(16) + ゆ(2)"},
+            "地格": {"value": 4, "calculation": "ゆ(2) + う(2)"},
+            "外格": {"value": 12, "calculation": "総格(30) - 人格(18)"},
+            "総格": {"value": 30, "calculation": "高(10) + 橋(16) + ゆ(2) + う(2)"}
+          }
+        }
+      }
+    ]
+  },
+  "validation_rules": {
+    "character_validation": [
+      "対応する漢字辞書またはひらがな辞書に文字が存在する",
+      "画数が1以上81以下の範囲内である",
+      "判定結果が6段階（大吉・吉・中吉・小吉・凶・大凶）のいずれかである"
+    ],
+    "gogaku_validation": [
+      "天格 = 姓の全文字の画数合計",
+      "人格 = 姓の最後の文字 + 名の最初の文字",
+      "地格 = 名の全文字の画数合計",
+      "外格 = 総格 - 人格",
+      "総格 = 姓名の全文字の画数合計",
+      "すべての格の値が1以上81以下"
+    ],
+    "special_case_validation": [
+      "一文字姓の場合：天格 = 姓の画数 + 1（霊数）",
+      "一文字名の場合：地格 = 名の画数 + 1（霊数）",
+      "外格が1の場合：吉として扱う（霊数扱い）"
+    ]
+  },
+  "expected_api_responses": {
+    "success_example": {
+      "success": true,
+      "data": {
+        "characters": [
+          {"char": "田", "stroke": 5},
+          {"char": "中", "stroke": 4},
+          {"char": "太", "stroke": 4},
+          {"char": "郎", "stroke": 9}
+        ],
+        "gogaku": {
+          "tenkaku": {"value": 9, "result": "凶", "description": "才能はあるが苦労多し"},
+          "jinkaku": {"value": 8, "result": "吉", "description": "忍耐力があり努力家"},
+          "chikaku": {"value": 13, "result": "大吉", "description": "学芸に優れ人気運あり"},
+          "gaikaku": {"value": 14, "result": "凶", "description": "孤独で不遇な運勢"},
+          "sokaku": {"value": 22, "result": "凶", "description": "秋草の霜・挫折運"}
+        },
+        "overall": "中吉"
+      }
+    },
+    "error_example": {
+      "success": false,
+      "error": {
+        "code": "INVALID_CHARACTER",
+        "message": "対応していない文字が含まれています: 🌸"
+      }
+    }
+  }
+}
