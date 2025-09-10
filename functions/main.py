@@ -72,6 +72,7 @@ def basic_security_check(request):
     referer = request.headers.get('Referer', '')
     allowed_origins = [
         'https://storage.googleapis.com',
+        'https://seimei.shinyudo.com',  # 本番環境（カスタムドメイン）
         'http://localhost:3000',  # 開発環境用
         'http://localhost:8080'   # ローカルテスト用
     ]

@@ -6,7 +6,18 @@
       "Bash(python:*)",
       "Bash(pkill:*)",
       "Bash(gcloud config get-value:*)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(gcloud functions deploy:*)",
+      "Bash(firebase:*)",
+      "Bash(gcloud app deploy:*)",
+      "Bash(gsutil -m rsync -r -d frontend/build gs://seimei-handan-frontend-storage)",
+      "Bash(gsutil web set:*)",
+      "mcp__sequential-thinking__sequentialthinking",
+      "Bash(gsutil -m rsync -r -d frontend/build/ gs://seimei-handan-frontend-storage)",
+      "Bash(gcloud functions describe:*)",
+      "Bash(gsutil ls:*)",
+      "Bash(env)",
+      "Bash(terraform:*)"
     ],
     "deny": [],
     "ask": []
