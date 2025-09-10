@@ -1,0 +1,17 @@
+*.log
+# Terraform
+*.tfvars
+*.auto.tfvars
+terraform.tfvars
+.terraform/
+terraform.tfstate
+terraform.tfstate.backup
+.crash
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Secrets
+secrets/*
+!secrets/README.md

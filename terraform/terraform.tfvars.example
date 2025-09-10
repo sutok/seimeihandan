@@ -1,0 +1,25 @@
+# GCPプロジェクト設定
+project_id = "PROJECT_ID"
+
+# アプリケーション設定
+app_name = "APP_NAME"
+
+# ドメイン設定
+domain_name = "FQDN"
+
+# ロケーション設定
+region = "asia-northeast1"
+location = "asia-northeast1"
+
+# Cloud Functions設定
+function_name = "FQDN-api"
+
+# Cloud Storage設定
+# バケット名はランダムサフィックスが自動的に付加されます
+# 例: seimei-handan-frontend-abc123
+
+# SSL証明書設定
+# Google管理のSSL証明書が自動的に作成されます
+
+# セキュリティ設定
+# 許可するオリジンはCloud Functionsコード内で設定されます
