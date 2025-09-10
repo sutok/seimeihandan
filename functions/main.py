@@ -6,6 +6,8 @@ jamdict + KanjiDic2を使用した康熙字典準拠の姓名判断API
 import json
 import logging
 import threading
+import time
+from collections import defaultdict
 from typing import Dict, List, Optional, Tuple
 from flask import Flask, request, jsonify
 from flask_cors import CORS
@@ -24,6 +26,9 @@ hiragana_strokes = None
 # スレッドローカルストレージ
 thread_local = threading.local()
 
+# セキュリティ関連変数
+request_tracker = defaultdict(list)
+
 def initialize_dictionaries():
     """辞書データの初期化（Functions起動時に1度だけ実行）"""
     global jam, gogaku_rules, hiragana_strokes
@@ -37,7 +42,7 @@ def initialize_dictionaries():
         logger.info("📊 五格説判定ルールを読込中...")
         # 既存の五格説ルールファイルを読込
         try:
-            with open('../data/gogaku_judgment.json', 'r', encoding='utf-8') as f:
+            with open('gogaku_judgment.json', 'r', encoding='utf-8') as f:
                 gogaku_rules = json.load(f)
             logger.info("✅ 五格説ルール読込完了")
         except FileNotFoundError:
@@ -48,7 +53,7 @@ def initialize_dictionaries():
     if hiragana_strokes is None:
         logger.info("🔤 ひらがな画数データを読込中...")
         try:
-            with open('../data/hiragana_strokes.json', 'r', encoding='utf-8') as f:
+            with open('hiragana_strokes.json', 'r', encoding='utf-8') as f:
                 hiragana_data = json.load(f)
                 hiragana_strokes = hiragana_data.get('hiragana_dictionary', {})
             logger.info("✅ ひらがな画数データ読込完了")
@@ -56,6 +61,55 @@ def initialize_dictionaries():
             # ファイルが見つからない場合はコード内に埋め込み
             hiragana_strokes = get_embedded_hiragana_strokes()
             logger.info("✅ 埋め込みひらがな画数データ使用")
+
+def basic_security_check(request):
+    """基本的なセキュリティチェック（Phase A対策）"""
+    client_ip = request.environ.get('HTTP_X_FORWARDED_FOR', 
+                                   request.environ.get('REMOTE_ADDR', 'unknown'))
+    
+    # 1. リファラー/オリジンチェック
+    origin = request.headers.get('Origin', '')
+    referer = request.headers.get('Referer', '')
+    allowed_origins = [
+        'https://storage.googleapis.com',
+        'http://localhost:3000',  # 開発環境用
+        'http://localhost:8080'   # ローカルテスト用
+    ]
+    
+    # オリジンまたはリファラーが存在する場合のみチェック
+    if origin:
+        if not any(allowed_origin in origin for allowed_origin in allowed_origins):
+            logger.warning(f"🚨 不正なオリジン: {origin} from IP: {client_ip}")
+            return False, "アクセスが拒否されました"
+    
+    if referer and not origin:  # オリジンがない場合はリファラーをチェック
+        if not any(allowed_origin in referer for allowed_origin in allowed_origins):
+            logger.warning(f"🚨 不正なリファラー: {referer} from IP: {client_ip}")
+            return False, "アクセスが拒否されました"
+    
+    # 2. シンプルレート制限（1分間に10リクエスト）
+    now = time.time()
+    request_tracker[client_ip] = [
+        timestamp for timestamp in request_tracker[client_ip]
+        if timestamp > now - 60  # 1分以内のリクエストのみ保持
+    ]
+    
+    if len(request_tracker[client_ip]) >= 10:
+        logger.warning(f"🚨 レート制限超過: IP {client_ip} ({len(request_tracker[client_ip])} requests)")
+        return False, "リクエスト頻度が高すぎます。しばらく待ってから再試行してください"
+    
+    request_tracker[client_ip].append(now)
+    
+    # 3. User-Agent基本チェック
+    user_agent = request.headers.get('User-Agent', '')
+    blocked_agents = ['bot', 'curl', 'wget', 'scraper', 'spider', 'crawler']
+    
+    for agent in blocked_agents:
+        if agent.lower() in user_agent.lower():
+            logger.warning(f"🚨 ブロックされたUser-Agent: {user_agent} from IP: {client_ip}")
+            return False, "自動化されたアクセスは許可されていません"
+    
+    return True, None
 
 def get_thread_local_jamdict():
     """スレッドローカルなjamdict インスタンスを取得"""
@@ -218,6 +272,18 @@ def seimei_handan(request):
     
     # 辞書初期化
     initialize_dictionaries()
+    
+    # セキュリティチェック
+    is_valid, error_msg = basic_security_check(request)
+    if not is_valid:
+        headers = {
+            'Access-Control-Allow-Origin': '*',
+            'Content-Type': 'application/json; charset=utf-8'
+        }
+        return jsonify({
+            'success': False,
+            'error': {'code': 'SECURITY_VIOLATION', 'message': error_msg}
+        }), 403, headers
     
     # CORS対応
     if request.method == 'OPTIONS':

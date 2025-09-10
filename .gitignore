@@ -325,4 +325,7 @@ frontend/.env.local
 # sh
 *.sh
 
+# .firebaserc
+.firebaserc
+
 # End of https://www.toptal.com/developers/gitignore/api/python,node
