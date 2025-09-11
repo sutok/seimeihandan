@@ -23,7 +23,7 @@ gcloud auth login
 # アプリケーションデフォルト認証を設定
 gcloud auth application-default login
 
-# プロジェクトIDを設定（例：ai-tools-471505）
+# プロジェクトIDを設定（例：my-tools-xxxxx）
 gcloud config set project YOUR_PROJECT_ID
 ```
 
