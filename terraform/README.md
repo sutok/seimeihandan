@@ -23,8 +23,8 @@ gcloud auth login
 # アプリケーションデフォルト認証を設定
 gcloud auth application-default login
 
-# プロジェクトIDを設定（例：ai-tools-471505）
-gcloud config set project ${YOUR_PROJECT_ID}
+# プロジェクトIDを設定（例：my-tools-xxxxx）
+gcloud config set project YOUR_PROJECT_ID
 ```
 
 ### 3. Terraform設定ファイルの作成
