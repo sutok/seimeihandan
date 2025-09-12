@@ -185,7 +185,7 @@ const kakuExplanations = {
 };
 
 function ResultDisplay({ result, lastName, firstName }) {
-  const { characters, gogaku, overall } = result;
+  const { characters = [], gogaku = {}, overall = "不明" } = result;
 
   return (
     <ResultContainer>
@@ -199,12 +199,19 @@ function ResultDisplay({ result, lastName, firstName }) {
       <CharacterSection>
         <CharacterTitle>文字構成と画数</CharacterTitle>
         <CharacterGrid>
-          {characters.map((char, index) => (
-            <CharacterCard key={index}>
-              <div className="character">{char.char}</div>
-              <div className="stroke">{char.stroke}画</div>
+          {characters && characters.length > 0 ? (
+            characters.map((char, index) => (
+              <CharacterCard key={index}>
+                <div className="character">{char.char}</div>
+                <div className="stroke">{char.stroke}画</div>
+              </CharacterCard>
+            ))
+          ) : (
+            <CharacterCard>
+              <div className="character">-</div>
+              <div className="stroke">-</div>
             </CharacterCard>
-          ))}
+          )}
         </CharacterGrid>
       </CharacterSection>
 
@@ -212,23 +219,31 @@ function ResultDisplay({ result, lastName, firstName }) {
       <GogakuSection>
         <GogakuTitle>五格説による詳細診断</GogakuTitle>
         <GogakuGrid>
-          {Object.entries(gogaku).map(([key, value]) => (
-            <GogakuCard key={key}>
-              <KakuName>
-                {kakuNames[key]}
-                <KakuValue>{value.value}画</KakuValue>
-              </KakuName>
-              
-              <KakuResult result={value.result}>
-                {value.result}
-              </KakuResult>
-              
+          {gogaku && Object.keys(gogaku).length > 0 ? (
+            Object.entries(gogaku).map(([key, value]) => (
+              <GogakuCard key={key}>
+                <KakuName>
+                  {kakuNames[key] || key}
+                  <KakuValue>{value.value}画</KakuValue>
+                </KakuName>
+                
+                <KakuResult result={value.result}>
+                  {value.result}
+                </KakuResult>
+                
+                <KakuDescription>
+                  <strong>{kakuExplanations[key] || "説明なし"}</strong><br />
+                  {value.description || "詳細なし"}
+                </KakuDescription>
+              </GogakuCard>
+            ))
+          ) : (
+            <GogakuCard>
               <KakuDescription>
-                <strong>{kakuExplanations[key]}</strong><br />
-                {value.description}
+                五格の詳細データがありません。
               </KakuDescription>
             </GogakuCard>
-          ))}
+          )}
         </GogakuGrid>
       </GogakuSection>
 

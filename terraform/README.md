@@ -24,7 +24,7 @@ gcloud auth login
 gcloud auth application-default login
 
 # プロジェクトIDを設定（例：ai-tools-471505）
-gcloud config set project YOUR_PROJECT_ID
+gcloud config set project ${YOUR_PROJECT_ID}
 ```
 
 ### 3. Terraform設定ファイルの作成
@@ -39,20 +39,20 @@ cp terraform.tfvars.example terraform.tfvars
 
 ```hcl
 # GCPプロジェクト設定
-project_id = "your-gcp-project-id"
+project_id = "${YOUR_PROJECT_ID}"
 
 # アプリケーション設定
-app_name = "seimei-handan"
+app_name = "${APP_NAME}"
 
 # ドメイン設定（必要に応じて変更）
-domain_name = "seimei.shinyudo.com"
+domain_name = "${FQDN}"
 
 # ロケーション設定（必要に応じて変更）
 region = "asia-northeast1"
 location = "asia-northeast1"
 
 # Cloud Functions設定（必要に応じて変更）
-function_name = "seimei-handan-api"
+function_name = "${APP_NAME}-api"
 ```
 
 ### 4. Terraformの初期化と実行
