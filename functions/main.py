@@ -72,6 +72,7 @@ def basic_security_check(request):
     referer = request.headers.get('Referer', '')
     allowed_origins = [
         'https://storage.googleapis.com',
+        'https://seimei-handan.shinyudo.com',  # 本番環境用
         'http://localhost:3000',  # 開発環境用
         'http://localhost:8080'   # ローカルテスト用
     ]
@@ -100,14 +101,25 @@ def basic_security_check(request):
     
     request_tracker[client_ip].append(now)
     
-    # 3. User-Agent基本チェック
+    # 3. User-Agent基本チェック（API Gatewayからのリクエストは許可）
     user_agent = request.headers.get('User-Agent', '')
-    blocked_agents = ['bot', 'curl', 'wget', 'scraper', 'spider', 'crawler']
     
-    for agent in blocked_agents:
-        if agent.lower() in user_agent.lower():
-            logger.warning(f"🚨 ブロックされたUser-Agent: {user_agent} from IP: {client_ip}")
-            return False, "自動化されたアクセスは許可されていません"
+    # API Gatewayからのリクエストかどうかをチェック
+    is_api_gateway = (
+        'Google-Cloud-API-Gateway' in user_agent or
+        'Google-Cloud-Functions' in user_agent or
+        'Google-Cloud-Run' in user_agent or
+        'Google-Cloud-Platform' in user_agent
+    )
+    
+    # API Gatewayからのリクエストでない場合のみUser-Agentをチェック
+    if not is_api_gateway:
+        blocked_agents = ['bot', 'curl', 'wget', 'scraper', 'spider', 'crawler']
+        
+        for agent in blocked_agents:
+            if agent.lower() in user_agent.lower():
+                logger.warning(f"🚨 ブロックされたUser-Agent: {user_agent} from IP: {client_ip}")
+                return False, "自動化されたアクセスは許可されていません"
     
     return True, None
 
@@ -265,6 +277,11 @@ def get_overall_judgment(gogaku_results: Dict) -> str:
         return '凶'
     else:
         return '大凶'
+
+@functions_framework.http
+def main(request):
+    """Cloud Functions エントリーポイント"""
+    return seimei_handan(request)
 
 @functions_framework.http
 def seimei_handan(request):
