@@ -81,8 +81,8 @@ function App() {
     setResult(null);
     
     try {
-      // 開発環境用のAPI URL（本番では環境変数で設定）
-      const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8080';
+      // 本番環境用のAPI URL
+      const apiUrl = process.env.REACT_APP_API_URL || 'https://seimei-handan-c4vnl29w.an.gateway.dev';
       
       const response = await fetch(`${apiUrl}/api/analyze`, {
         method: 'POST',
@@ -103,25 +103,8 @@ function App() {
       
       const data = await response.json();
       
-      // 現在は仮のバックエンド（httpbin.org）なので、任意のレスポンス処理
-      if (data.json) {
-        // httpbin.orgのレスポンス形式
-        setResult({
-          overall: "大吉",
-          characters: [
-            { char: data.json.lastName || "姓", stroke: 8 },
-            { char: data.json.firstName || "名", stroke: 6 }
-          ],
-          gogaku: {
-            tenkaku: { value: 8, result: "吉", description: "天格の説明" },
-            jinkaku: { value: 14, result: "大吉", description: "人格の説明" },
-            chikaku: { value: 6, result: "中吉", description: "地格の説明" },
-            gaikaku: { value: 8, result: "吉", description: "外格の説明" },
-            sokaku: { value: 20, result: "大吉", description: "総格の説明" }
-          }
-        });
-        setSubmittedName({ lastName, firstName });
-      } else if (data.success) {
+      // バックエンドAPIのレスポンス処理
+      if (data.success) {
         // 実際のAPIのレスポンス形式
         setResult(data.data);
         setSubmittedName({ lastName, firstName });
