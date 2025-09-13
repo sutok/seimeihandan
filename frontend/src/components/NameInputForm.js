@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import AffiliateBanner from './AffiliateBanner';
 
 // Styled Components
 const FormContainer = styled.div`
@@ -268,20 +269,34 @@ function NameInputForm({ onSubmit }) {
           </div>
         )}
         
+        <AffiliateBanner 
+          title="姓名判断アプリの使い方動画"
+          description="姓名判断の基本から応用まで、分かりやすい動画で学習できます"
+          buttonText="動画を見る"
+          buttonUrl="https://example.com/affiliate4"
+        />
+        
+        <InfoText>
+          <InfoTitle>ご利用について</InfoTitle>
+          <InfoList>
+            <li>康熙字典準拠の画数で計算します</li>
+            <li>五格説（天格・人格・地格・外格・総格）による判定</li>
+            <li>漢字・ひらがなの混在入力が可能です</li>
+            <li>一文字の姓名には霊数（+1画）を適用します</li>
+          </InfoList>
+        </InfoText>
+        
+        <AffiliateBanner 
+          title="姓名判断の歴史と文化"
+          description="姓名判断の起源から現代まで、日本の姓名文化について学べるコンテンツ"
+          buttonText="文化を学ぶ"
+          buttonUrl="https://example.com/affiliate5"
+        />
+        
         <SubmitButton type="submit" disabled={isSubmitDisabled}>
           診断する
         </SubmitButton>
       </Form>
-      
-      <InfoText>
-        <InfoTitle>ご利用について</InfoTitle>
-        <InfoList>
-          <li>康熙字典準拠の画数で計算します</li>
-          <li>五格説（天格・人格・地格・外格・総格）による判定</li>
-          <li>漢字・ひらがなの混在入力が可能です</li>
-          <li>一文字の姓名には霊数（+1画）を適用します</li>
-        </InfoList>
-      </InfoText>
     </FormContainer>
   );
 }

@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import AffiliateBanner from './AffiliateBanner';
 
 // Styled Components
 const ResultContainer = styled.div`
@@ -246,6 +247,14 @@ function ResultDisplay({ result, lastName, firstName }) {
           )}
         </GogakuGrid>
       </GogakuSection>
+
+      {/* アフィリエイト表示 */}
+      <AffiliateBanner 
+        title="姓名判断の専門書籍"
+        description="姓名判断の理論を深く学びたい方におすすめの専門書と参考資料"
+        buttonText="専門書籍を見る"
+        buttonUrl="https://example.com/affiliate3"
+      />
 
       {/* 補足説明 */}
       <div style={{
