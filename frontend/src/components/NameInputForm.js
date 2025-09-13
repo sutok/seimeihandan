@@ -287,10 +287,10 @@ function NameInputForm({ onSubmit }) {
         </InfoText>
         
         <AffiliateBanner 
-          title="姓名判断の歴史と文化"
-          description="姓名判断の起源から現代まで、日本の姓名文化について学べるコンテンツ"
-          buttonText="文化を学ぶ"
-          buttonUrl="https://example.com/affiliate5"
+          title=""
+          description="時間を節約したいなら、クラウドワークスAIが最適解。業務の自動化で、月に20時間の余裕が生まれる！その時間を趣味や学びに使おう。"
+          buttonText="クラウドワークスAI"
+          buttonUrl="https://ordermaid.ai/d/imzecwomvlqlfrbh"
         />
         
         <SubmitButton type="submit" disabled={isSubmitDisabled}>
